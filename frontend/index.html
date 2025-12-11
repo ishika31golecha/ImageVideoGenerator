@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Article Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 AI Article Generator</h1>
+            <p class="subtitle">Generate articles and create stunning images</p>
+        </header>
+
+        <!-- Step 1: Input Form -->
+        <section id="input-section" class="section">
+            <h2>Step 1: Enter Your Topic</h2>
+            <div class="form-group">
+                <label for="topic">Topic:</label>
+                <input type="text" id="topic" placeholder="e.g., Artificial Intelligence, Climate Change, Space Exploration" />
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="length">Article Length:</label>
+                    <select id="length">
+                        <option value="Short">Short (100-150 words)</option>
+                        <option value="Medium" selected>Medium (200-300 words)</option>
+                        <option value="Long">Long (400-500 words)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tone">Tone:</label>
+                    <select id="tone">
+                        <option value="Formal">Formal</option>
+                        <option value="Creative" selected>Creative</option>
+                        <option value="Professional">Professional</option>
+                        <option value="Informal">Informal</option>
+                        <option value="Educational">Educational</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="language">Language:</label>
+                    <select id="language">
+                        <option value="English" selected>English</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="Hinglish">Hinglish</option>
+                    </select>
+                </div>
+            </div>
+
+            <button id="generate-btn" class="btn btn-primary">Generate Articles</button>
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Generating articles...</p>
+            </div>
+        </section>
+
+        <!-- Step 2: Article Selection -->
+        <section id="articles-section" class="section hidden">
+            <h2>Step 2: Choose Your Favorite Article</h2>
+            <div id="articles-container" class="articles-grid"></div>
+        </section>
+
+        <!-- Step 3: Image Generation -->
+        <section id="image-section" class="section hidden">
+            <h2>Step 3: Generate Your Image</h2>
+            <div class="selected-article">
+                <h3 id="selected-title">Selected Article</h3>
+                <p id="selected-text"></p>
+            </div>
+            <button id="generate-image-btn" class="btn btn-primary">Generate Image</button>
+            <div id="image-loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Creating your image... (this may take 10-20 seconds)</p>
+            </div>
+        </section>
+
+        <!-- Step 4: Final Result -->
+        <section id="result-section" class="section hidden">
+            <h2>🎉 Your Final Image</h2>
+            <div class="image-container">
+                <img id="final-image" src="" alt="Generated Image" />
+            </div>
+            <div class="action-buttons">
+                <a id="download-btn" href="" download="article-image.png" class="btn btn-success">📥 Download Image</a>
+                <button id="restart-btn" class="btn btn-secondary">🔄 Create Another</button>
+            </div>
+        </section>
+
+        <!-- Error Message -->
+        <div id="error-message" class="error-message hidden"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
