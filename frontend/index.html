@@ -1,100 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Article Generator</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Content Studio</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🤖 AI Article Generator</h1>
-            <p class="subtitle">Generate articles and create stunning images</p>
-        </header>
+  <div class="app">
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-top">
+        <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+          <!-- menu icon -->
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+               stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        </button>
 
-        <!-- Step 1: Input Form -->
-        <section id="input-section" class="section">
-            <h2>Step 1: Enter Your Topic</h2>
-            <div class="form-group">
-                <label for="topic">Topic:</label>
-                <input type="text" id="topic" placeholder="e.g., Artificial Intelligence, Climate Change, Space Exploration" />
+        <div class="brand">
+          
+          <div class="brand-text">
+            <div class="brand-title">AI Content Studio</div>
+            <div class="brand-sub">Create — Edit — Schedule</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="nav" role="navigation" aria-label="Main">
+        <ul>
+          <li>
+            <a href="#" class="nav-link active" data-section="image-generator">
+              <span class="nav-icon" aria-hidden="true">
+                <!-- image icon -->
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-7 7"/>
+                </svg>
+              </span>
+              <span class="nav-label">Image Generator</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="nav-link" data-section="video-generator">
+              <span class="nav-icon" aria-hidden="true">
+                <!-- video icon -->
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <rect x="2" y="5" width="14" height="14" rx="2" ry="2"/><path d="M22 7l-6 4v2l6 4z"/>
+                </svg>
+              </span>
+              <span class="nav-label">Video Generator</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="#" class="nav-link" data-section="schedule-post">
+              <span class="nav-icon" aria-hidden="true">
+                <!-- calendar icon -->
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+                </svg>
+              </span>
+              <span class="nav-label">Schedule Post</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <button id="collapse-btn" class="collapse-btn" aria-pressed="false">
+          <span class="collapse-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </span>
+          <span class="collapse-label">Collapse</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <header class="page-header">
+        <div>
+          <h1>AI Article & Image Generator</h1>
+          <p class="subtitle">Generate articles, images, videos and schedule content</p>
+        </div>
+      </header>
+
+      <section id="image-generator" class="panel active-panel">
+        <!-- Keep your original markup for article -> image generator -->
+        <div class="card">
+          <h2>Step 1: Enter Your Topic</h2>
+
+          <div class="form-row">
+            <label for="topic">Topic</label>
+            <input id="topic" type="text" placeholder="e.g., Artificial Intelligence, Climate Change, Space Exploration" />
+          </div>
+
+          <div class="options-grid">
+            <div class="form-row">
+              <label for="length">Article Length</label>
+              <select id="length">
+                <option value="Short">Short (100-150 words)</option>
+                <option value="Medium" selected>Medium (200-300 words)</option>
+                <option value="Long">Long (400-500 words)</option>
+              </select>
             </div>
 
-            <div class="options-grid">
-                <div class="form-group">
-                    <label for="length">Article Length:</label>
-                    <select id="length">
-                        <option value="Short">Short (100-150 words)</option>
-                        <option value="Medium" selected>Medium (200-300 words)</option>
-                        <option value="Long">Long (400-500 words)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="tone">Tone:</label>
-                    <select id="tone">
-                        <option value="Formal">Formal</option>
-                        <option value="Creative" selected>Creative</option>
-                        <option value="Professional">Professional</option>
-                        <option value="Informal">Informal</option>
-                        <option value="Educational">Educational</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="language">Language:</label>
-                    <select id="language">
-                        <option value="English" selected>English</option>
-                        <option value="Hindi">Hindi</option>
-                        <option value="Hinglish">Hinglish</option>
-                    </select>
-                </div>
+            <div class="form-row">
+              <label for="tone">Tone</label>
+              <select id="tone">
+                <option value="Formal">Formal</option>
+                <option value="Creative" selected>Creative</option>
+                <option value="Professional">Professional</option>
+                <option value="Informal">Informal</option>
+                <option value="Educational">Educational</option>
+              </select>
             </div>
 
-            <button id="generate-btn" class="btn btn-primary">Generate Articles</button>
+            <div class="form-row">
+              <label for="language">Language</label>
+              <select id="language">
+                <option value="English" selected>English</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Hinglish">Hinglish</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="generate-btn" class="btn primary">Generate Articles</button>
             <div id="loading" class="loading hidden">
-                <div class="spinner"></div>
-                <p>Generating articles...</p>
+              <div class="spinner"></div>
+              <p>Generating articles...</p>
             </div>
-        </section>
+          </div>
+        </div>
 
-        <!-- Step 2: Article Selection -->
-        <section id="articles-section" class="section hidden">
-            <h2>Step 2: Choose Your Favorite Article</h2>
-            <div id="articles-container" class="articles-grid"></div>
-        </section>
+        <div id="articles-section" class="card hidden">
+          <h2>Step 2: Choose Your Favorite Article</h2>
+          <div id="articles-container" class="articles-grid"></div>
+        </div>
 
-        <!-- Step 3: Image Generation -->
-        <section id="image-section" class="section hidden">
-            <h2>Step 3: Generate Your Image</h2>
-            <div class="selected-article">
-                <h3 id="selected-title">Selected Article</h3>
-                <p id="selected-text"></p>
-            </div>
-            <button id="generate-image-btn" class="btn btn-primary">Generate Image</button>
+        <div id="image-section" class="card hidden">
+          <h2>Step 3: Generate Your Image</h2>
+          <div class="selected-article">
+            <h3 id="selected-title">Selected Article</h3>
+            <p id="selected-text"></p>
+          </div>
+          <div class="actions">
+            <button id="generate-image-btn" class="btn primary">Generate Image</button>
             <div id="image-loading" class="loading hidden">
-                <div class="spinner"></div>
-                <p>Creating your image... (this may take 10-20 seconds)</p>
+              <div class="spinner"></div>
+              <p>Creating your image... (this may take a few seconds)</p>
             </div>
-        </section>
+          </div>
+        </div>
 
-        <!-- Step 4: Final Result -->
-        <section id="result-section" class="section hidden">
-            <h2>🎉 Your Final Image</h2>
-            <div class="image-container">
-                <img id="final-image" src="" alt="Generated Image" />
-            </div>
-            <div class="action-buttons">
-                <a id="download-btn" href="" download="article-image.png" class="btn btn-success">📥 Download Image</a>
-                <button id="restart-btn" class="btn btn-secondary">🔄 Create Another</button>
-            </div>
-        </section>
+        <div id="result-section" class="card hidden">
+          <h2>Your Final Image</h2>
+          <div class="image-container">
+            <img id="final-image" src="" alt="Generated" />
+          </div>
+          <div class="caption-box hidden" id="caption-section">
+            <h3>Generated Caption</h3>
+            <p id="caption-text"></p>
+            <button id="copy-caption-btn" class="btn secondary">Copy Caption</button>
+          </div>
 
-        <!-- Error Message -->
+        <div class="actions">
+            <button id="generate-caption-btn" class="btn primary">Generate Caption</button>
+        </div>
+
+          <div class="action-row">
+            <a id="download-btn" href="" download="article-image.png" class="btn success">Download Image</a>
+            <button id="restart-btn" class="btn secondary">Create Another</button>
+          </div>
+        </div>
+
         <div id="error-message" class="error-message hidden"></div>
-    </div>
+      </section>
 
-    <script src="script.js"></script>
+      <section id="video-generator" class="panel">
+        <div class="card">
+          <h2>Video Generator</h2>
+          <p class="muted">Use this page to create short AI-generated videos. (Placeholder UI — hook your backend here.)</p>
+
+          <div class="form-row">
+            <label for="video-topic">Video Topic</label>
+            <input id="video-topic" type="text" placeholder="Enter video topic" />
+          </div>
+
+          <div class="form-row">
+            <label for="video-length">Duration</label>
+            <select id="video-length">
+              <option>15s</option>
+              <option>30s</option>
+              <option>60s</option>
+            </select>
+          </div>
+
+          <div class="actions">
+            <button id="generate-video-btn" class="btn primary">Generate Video</button>
+            <div id="video-loading" class="loading hidden">
+              <div class="spinner"></div>
+              <p>Generating video...</p>
+            </div>
+          </div>
+
+          <div id="video-result" class="hidden">
+            <h3>Video Preview</h3>
+            <video id="video-preview" controls width="100%"></video>
+          </div>
+        </div>
+      </section>
+
+      <section id="schedule-post" class="panel">
+        <div class="card">
+          <h2>Schedule Post</h2>
+          <p class="muted">Create and schedule your posts to publish later.</p>
+
+          <div class="form-row">
+            <label for="post-title">Post Title</label>
+            <input id="post-title" type="text" placeholder="Enter title" />
+          </div>
+
+          <div class="form-row">
+            <label for="post-content">Content</label>
+            <textarea id="post-content" rows="5" placeholder="Write post content"></textarea>
+          </div>
+
+          <div class="form-row">
+            <label for="post-date">Publish on</label>
+            <input id="post-date" type="datetime-local" />
+          </div>
+
+          <div class="actions">
+            <button id="schedule-btn" class="btn primary">Schedule</button>
+            <div id="schedule-loading" class="loading hidden">
+              <div class="spinner"></div>
+              <p>Scheduling post...</p>
+            </div>
+          </div>
+
+          <div id="schedule-result" class="hidden card">
+            <h3>Scheduled Posts</h3>
+            <ul id="scheduled-list"></ul>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>

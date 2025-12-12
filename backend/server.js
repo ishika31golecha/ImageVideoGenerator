@@ -18,150 +18,118 @@ const openai = new OpenAI({
 app.use(cors());
 app.use(express.json());
 
-// Health check endpoint
+// Health check
 app.get('/', (req, res) => {
-  res.json({ message: 'Article Generator API is running' });
+  res.json({ message: 'AI Content Studio API is running' });
 });
 
-// Route 1: Generate 3 Articles
+// =======================================================================
+// 1) Generate 3 Articles
+// =======================================================================
 app.post('/generate-articles', async (req, res) => {
   try {
     const { topic, length, tone, language } = req.body;
 
-    // Validation
-    if (!topic) {
-      return res.status(400).json({ error: 'Topic is required' });
-    }
+    if (!topic) return res.status(400).json({ error: 'Topic is required' });
 
-    // Map length to word count
     const lengthMap = {
-      'Short': '100-150 words',
-      'Medium': '200-300 words',
-      'Long': '400-500 words'
+      Short: '100-150 words',
+      Medium: '200-300 words',
+      Long: '400-500 words'
     };
 
     const wordCount = lengthMap[length] || '200-300 words';
 
-    // Construct the prompt
     const prompt = `Generate 3 different articles about "${topic}".
-
-Requirements:
-- Length: ${wordCount}
-- Tone: ${tone}
-- Language: ${language}
-
-Return ONLY a valid JSON object in this exact format (no markdown, no extra text):
+Length: ${wordCount}
+Tone: ${tone}
+Language: ${language}
+Return JSON ONLY:
 {
-  "article1": "First article text here",
-  "article2": "Second article text here",
-  "article3": "Third article text here"
-}
+ "article1":"...",
+ "article2":"...",
+ "article3":"..."
+}`;
 
-Make each article unique with different perspectives or angles on the topic.`;
-
-    console.log('Generating articles for topic:', topic);
-
-    // Call OpenAI API
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
-        {
-          role: 'system',
-          content: 'You are an expert content writer. You always return valid JSON as requested.'
-        },
-        {
-          role: 'user',
-          content: prompt
-        }
+        { role: 'system', content: 'Return clean JSON only.' },
+        { role: 'user', content: prompt }
       ],
-      temperature: 0.8,
       max_tokens: 2000
     });
 
-    const responseText = completion.choices[0].message.content.trim();
-    
-    // Parse JSON response
-    let articles;
-    try {
-      // Remove markdown code blocks if present
-      const cleanedResponse = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-      articles = JSON.parse(cleanedResponse);
-    } catch (parseError) {
-      console.error('Failed to parse OpenAI response:', responseText);
-      return res.status(500).json({ 
-        error: 'Failed to parse articles from AI response',
-        details: parseError.message 
-      });
-    }
+    let text = completion.choices[0].message.content.trim();
+    text = text.replace(/```json|```/g, '');
+    const parsed = JSON.parse(text);
 
-    // Validate response structure
-    if (!articles.article1 || !articles.article2 || !articles.article3) {
-      return res.status(500).json({ error: 'Invalid response format from AI' });
-    }
+    res.json(parsed);
 
-    console.log('Articles generated successfully');
-    res.json(articles);
-
-  } catch (error) {
-    console.error('Error generating articles:', error.message);
-    res.status(500).json({ 
-      error: 'Failed to generate articles', 
-      details: error.message 
-    });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to generate articles', details: err.message });
   }
 });
 
-// Route 2: Generate Final Image with Text
+// =======================================================================
+// 2) Generate Image
+// =======================================================================
 app.post('/generate-image', async (req, res) => {
   try {
     const { articleText, articleTitle } = req.body;
 
-    // Validation
-    if (!articleText || !articleTitle) {
-      return res.status(400).json({ error: 'Article text and title are required' });
-    }
-
-    // Construct image generation prompt
-    const imagePrompt = `Create a high-quality, modern illustration based on this article:
+    const prompt = `Create a modern high-quality illustration based on:
 "${articleText.substring(0, 500)}..."
+Include title: "${articleTitle}"`;
 
-Include this text clearly on the image:
-"${articleTitle}"
-
-The text must be bold, centered, readable, clean, and visually pleasing.
-The background should match the theme of the article.
-Use vibrant colors and professional design.`;
-
-    console.log('Generating image for article:', articleTitle);
-
-    // Call OpenAI DALL-E API
-    const image = await openai.images.generate({
-      model: 'dall-e-3',
-      prompt: imagePrompt,
-      n: 1,
-      size: '1024x1024',
-      quality: 'standard'
+    const img = await openai.images.generate({
+      model: "dall-e-3",
+      prompt,
+      size: "1024x1024",
+      n: 1
     });
 
-    const imageUrl = image.data[0].url;
+    res.json({ imageUrl: img.data[0].url });
 
-    console.log('Image generated successfully');
-    res.json({ imageUrl });
-
-  } catch (error) {
-    console.error('Error generating image:', error.message);
-    res.status(500).json({ 
-      error: 'Failed to generate image', 
-      details: error.message 
-    });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to generate image', details: err.message });
   }
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
-  console.log(`📝 Endpoints available:`);
-  console.log(`   POST /generate-articles - Generate 3 articles`);
-  console.log(`   POST /generate-image - Generate final image with text`);
+// =======================================================================
+// 3) Caption Generator
+// =======================================================================
+app.post('/generate-caption', async (req, res) => {
+  try {
+    const { articleText } = req.body;
+
+    const captionPrompt = `
+Write an engaging caption (100 word long caption) for:
+"${articleText}"
+Rules:
+- NO emojis
+- Include hashtags
+- No quotes
+Return only caption text.
+`;
+
+    const out = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "Write clean captions." },
+        { role: "user", content: captionPrompt }
+      ],
+      max_tokens: 80,
+      temperature: 0.8
+    });
+
+    res.json({ caption: out.choices[0].message.content.trim() });
+
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to generate caption', details: err.message });
+  }
 });
- 
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
