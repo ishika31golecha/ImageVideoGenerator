@@ -29,7 +29,6 @@ app.get('/', (req, res) => {
 app.post('/generate-articles', async (req, res) => {
   try {
     const { topic, length, tone, language } = req.body;
-
     if (!topic) return res.status(400).json({ error: 'Topic is required' });
 
     const lengthMap = {
@@ -40,21 +39,30 @@ app.post('/generate-articles', async (req, res) => {
 
     const wordCount = lengthMap[length] || '200-300 words';
 
-    const prompt = `Generate 3 different articles about "${topic}".
-Length: ${wordCount}
-Tone: ${tone}
-Language: ${language}
-Return JSON ONLY:
+    const prompt = `
+Generate 3 different well-structured articles on the topic: "${topic}"
+
+Rules for EACH article:
+- Provide a clear and professional TITLE
+- Content must be properly formatted
+- Use headings, subheadings, and bullet points where appropriate
+- Maintain paragraph spacing
+- Tone: ${tone}
+- Language: ${language}
+- Length: ${wordCount}
+
+Return STRICT JSON ONLY:
 {
- "article1":"...",
- "article2":"...",
- "article3":"..."
-}`;
+  "article1": { "title": "...", "content": "markdown content" },
+  "article2": { "title": "...", "content": "markdown content" },
+  "article3": { "title": "...", "content": "markdown content" }
+}
+`;
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
-        { role: 'system', content: 'Return clean JSON only.' },
+        { role: 'system', content: 'You are a professional content writer. Return valid JSON only.' },
         { role: 'user', content: prompt }
       ],
       max_tokens: 2000
@@ -65,22 +73,43 @@ Return JSON ONLY:
     const parsed = JSON.parse(text);
 
     res.json(parsed);
-
   } catch (err) {
     res.status(500).json({ error: 'Failed to generate articles', details: err.message });
   }
 });
 
 // =======================================================================
-// 2) Generate Image
+// 2) Generate Image (OPTION A – NO TEXT INSIDE IMAGE)
 // =======================================================================
 app.post('/generate-image', async (req, res) => {
   try {
-    const { articleText, articleTitle } = req.body;
+    const { articleText } = req.body;
 
-    const prompt = `Create a modern high-quality illustration based on:
-"${articleText.substring(0, 500)}..."
-Include title: "${articleTitle}"`;
+    const prompt = `
+Create a highly realistic, cinematic, professional business photograph.
+
+Scene:
+- Modern executive boardroom or corporate strategy room
+- Real human professionals (executives, analysts, decision-makers)
+- Natural expressions and body language
+- Looks like a real photograph (NOT illustration or CGI)
+
+Visual context:
+${articleText.substring(0, 400)}
+
+Rules:
+- DO NOT include any readable text
+- NO letters, numbers, charts with labels
+- Screens may show abstract visuals only
+- No typography of any kind
+
+Style:
+- Ultra-photorealistic
+- Cinematic lighting, HDR
+- Serious, corporate mood
+- Netflix / LinkedIn documentary style
+- 8K detail, sharp focus
+`;
 
     const img = await openai.images.generate({
       model: "dall-e-3",
@@ -90,7 +119,6 @@ Include title: "${articleTitle}"`;
     });
 
     res.json({ imageUrl: img.data[0].url });
-
   } catch (err) {
     res.status(500).json({ error: 'Failed to generate image', details: err.message });
   }
@@ -104,11 +132,12 @@ app.post('/generate-caption', async (req, res) => {
     const { articleText } = req.body;
 
     const captionPrompt = `
-Write an engaging caption (100 word long caption) for:
+Write a professional LinkedIn-style caption (~100 words) for:
 "${articleText}"
+
 Rules:
 - NO emojis
-- Include hashtags
+- Include relevant hashtags
 - No quotes
 Return only caption text.
 `;
@@ -116,15 +145,14 @@ Return only caption text.
     const out = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: "Write clean captions." },
+        { role: "system", content: "Write clean professional captions." },
         { role: "user", content: captionPrompt }
       ],
-      max_tokens: 80,
-      temperature: 0.8
+      max_tokens: 120,
+      temperature: 0.7
     });
 
     res.json({ caption: out.choices[0].message.content.trim() });
-
   } catch (err) {
     res.status(500).json({ error: 'Failed to generate caption', details: err.message });
   }
