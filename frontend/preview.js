@@ -13,23 +13,30 @@ postBtn.onclick = async () => {
     document.querySelectorAll('input[type=checkbox]:checked')
   ).map(cb => cb.value);
 
-  if (platforms.length === 0) {
+  if (!platforms.length) {
     alert('Select at least one platform');
     return;
   }
 
+  postBtn.disabled = true;
   status.textContent = 'Posting...';
 
-  const resp = await fetch('http://localhost:3000/publish', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      imageUrl: img.src,
-      caption: caption.value,
-      platforms
-    })
-  });
+  try {
+    const resp = await fetch('http://localhost:3000/publish', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        imageUrl: img.src,
+        caption: caption.value,
+        platforms
+      })
+    });
 
-  const result = await resp.json();
-  status.textContent = JSON.stringify(result, null, 2);
+    const result = await resp.json();
+    status.textContent = '✅ Posted successfully:\n' + JSON.stringify(result, null, 2);
+  } catch (e) {
+    status.textContent = '❌ Failed to post';
+  }
+
+  postBtn.disabled = false;
 };
