@@ -31,6 +31,7 @@ const posterSubtitle = document.getElementById('poster-subtitle');
 const generateCaptionBtn = document.getElementById('generate-caption-btn');
 const captionSection = document.getElementById('caption-section');
 const captionText = document.getElementById('caption-text');
+const previewBtn = document.getElementById('preview-btn');
 
 // Error helper
 function showError(msg){
@@ -90,6 +91,18 @@ generateBtn.addEventListener('click', async () => {
   generateBtn.disabled = false;
 });
 
+previewBtn.addEventListener('click', () => {
+  const payload = {
+    imageUrl: finalImage.src,
+    caption: captionText.textContent
+  };
+
+  // store temporarily (safe, no tokens)
+  localStorage.setItem('previewPost', JSON.stringify(payload));
+
+  window.open('preview.html', '_blank');
+});
+
 // Select Article
 function selectArticle(article){
   selectedArticle = article;
@@ -141,4 +154,12 @@ generateCaptionBtn.addEventListener('click', async () => {
 
   const data = await resp.json();
   captionText.textContent = data.caption;
+  // Hide other actions
+  document.getElementById('generate-caption-btn').style.display = 'none';
+  document.getElementById('download-btn').style.display = 'none';
+  document.getElementById('restart-btn').style.display = 'none';
+
+  // Show preview button
+  previewBtn.classList.remove('hidden');
+
 });

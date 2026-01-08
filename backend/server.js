@@ -161,3 +161,56 @@ Return only caption text.
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+
+const axios = require('axios');
+
+app.post('/publish', async (req, res) => {
+  const { imageUrl, caption, platforms } = req.body;
+  const results = {};
+
+  try {
+    if (platforms.includes('instagram')) {
+      const igUserId = process.env.INSTAGRAM_BUSINESS_ID;
+      const token = process.env.INSTAGRAM_ACCESS_TOKEN;
+
+      const create = await axios.post(
+        `https://graph.facebook.com/v18.0/${igUserId}/media`,
+        null,
+        { params: { image_url: imageUrl, caption, access_token: token } }
+      );
+
+      await axios.post(
+        `https://graph.facebook.com/v18.0/${igUserId}/media_publish`,
+        null,
+        { params: { creation_id: create.data.id, access_token: token } }
+      );
+
+      results.instagram = 'Posted';
+    }
+
+    if (platforms.includes('facebook')) {
+      await axios.post(
+        `https://graph.facebook.com/v18.0/${process.env.FACEBOOK_PAGE_ID}/photos`,
+        null,
+        {
+          params: {
+            url: imageUrl,
+            caption,
+            access_token: process.env.FACEBOOK_PAGE_ACCESS_TOKEN
+          }
+        }
+      );
+
+      results.facebook = 'Posted';
+    }
+
+    // LinkedIn → we’ll add next (needs org/user setup)
+    if (platforms.includes('linkedin')) {
+      results.linkedin = 'Pending setup';
+    }
+
+    res.json(results);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});

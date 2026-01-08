@@ -1,0 +1,125 @@
+/* ===== BASE ===== */
+* {
+  box-sizing: border-box;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #0b0b0b;
+  color: #fff;
+}
+
+/* ===== TOP BAR ===== */
+.top-bar {
+  padding: 16px 24px;
+  background: #111;
+  border-bottom: 1px solid #222;
+}
+
+.top-bar h2 {
+  margin: 0;
+  color: #ff9800;
+}
+
+/* ===== LAYOUT ===== */
+.preview-wrapper {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 24px;
+  padding: 24px;
+  height: calc(100vh - 70px);
+}
+
+/* ===== IMAGE ===== */
+.image-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-card {
+  background: #111;
+  padding: 16px;
+  border-radius: 14px;
+  max-width: 100%;
+}
+
+.image-card img {
+  max-width: 100%;
+  max-height: 520px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+/* ===== RIGHT PANEL ===== */
+.content-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Cards */
+.caption-card,
+.platform-card,
+.action-card {
+  background: #111;
+  padding: 16px;
+  border-radius: 14px;
+}
+
+/* Caption */
+.caption-card textarea {
+  width: 100%;
+  background: #0e0e0e;
+  border: 1px solid #222;
+  color: #fff;
+  border-radius: 8px;
+  padding: 12px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* Platforms */
+.platform-card label {
+  display: block;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.platform-card .disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Buttons */
+.btn {
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.btn.primary {
+  background: #2ecc71;
+  color: #000;
+}
+
+.btn.secondary {
+  background: #333;
+  color: #aaa;
+}
+
+.btn.primary:hover {
+  background: #27ae60;
+}
+
+/* Status */
+.status {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #8bc34a;
+  white-space: pre-wrap;
+}

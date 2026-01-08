@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Preview & Publish</title>
+  <link rel="stylesheet" href="preview.css" />
+</head>
+<body>
+
+  <header class="top-bar">
+    <h2>Preview & Publish</h2>
+  </header>
+
+  <main class="preview-wrapper">
+
+    <!-- LEFT: IMAGE -->
+    <section class="image-section">
+      <div class="image-card">
+        <img id="preview-image" alt="Preview image" />
+      </div>
+    </section>
+
+    <!-- RIGHT: CONTENT -->
+    <section class="content-section">
+
+      <div class="caption-card">
+        <h3>Caption</h3>
+        <textarea id="preview-caption" rows="8"></textarea>
+      </div>
+
+      <div class="platform-card">
+        <h3>Post to</h3>
+
+        <label><input type="checkbox" value="instagram" checked> Instagram</label>
+        <label><input type="checkbox" value="facebook" checked> Facebook</label>
+        <label><input type="checkbox" value="linkedin"> LinkedIn</label>
+        <label class="disabled">
+          <input type="checkbox" disabled> YouTube (images not supported)
+        </label>
+      </div>
+
+      <div class="action-card">
+        <button id="post-now-btn" class="btn primary">Post Now</button>
+        <button class="btn secondary" disabled>Schedule (coming soon)</button>
+        <p id="status" class="status"></p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="preview.js"></script>
+</body>
+</html>
